@@ -11,6 +11,7 @@ function init()
     postcodeService = new OpenSpace.Postcode();    
     //postcodeService.getLonLat("CF83 1SR", processPostcodeResult);    
     
+    loadOtterIcon();
 
     /*var request = OpenLayers.Request.GET({
       url: "/listmdb",
