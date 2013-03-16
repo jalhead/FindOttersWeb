@@ -106,7 +106,12 @@
 
 		    function displayOttersNearLocation(longitude, latitude) {
 		      var bounds = osMap.getExtent();
-                      var requestString = 'http://damp-sierra-3977.herokuapp.com/otters?topLat='+bounds.left+'&topLong='+bounds.top+'&bottomLat='+bounds.right+'&bottomLong='+bounds.bottom;
+		      var TL = new OpenSpace.MapPoint(bounds.left, bounds.top);
+		      var BR = new OpenSpace.MapPoint(bounds.right, bounds.bottom);
+		      var gridProjection = new OpenSpace.GridProjection();
+		      TL = gridProjection.getLonLatFromMapPoint(TL);	
+		      BR = gridProjection.getLonLatFromMapPoint(BR);	
+                      var requestString = 'http://damp-sierra-3977.herokuapp.com/otters?topLat='+TL.lat+'&topLong='+TL.lon+'&bottomLat='+BR.lat+'&bottomLong='+BR.lon;
 		      // TODO - make request
                       console.log(requestString);
 		      addOtter(-2.603191, 51.455839);
