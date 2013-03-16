@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Map with markers</title>
+		<link rel="stylesheet" href="/envhack/content/basicmap.css" type="text/css"/>
+		<link rel="stylesheet" href="/envhack/content/bootstrap.css" type="text/css"/>
+		
+		
+		<!-- Using JH's API key - change if you want to access via a non-localhost url  -->
+		<script type="text/javascript"
+			src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=D7875AA835649C09E0405F0AC8607A15"></script>
+		<script type="text/javascript" src="/envhack/content/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/envhack/content/bootstrap.js"></script>
+		<script type="text/javascript" src="/envhack/content/map_init.js?v=1"></script>
+		<script type="text/javascript" src="/envhack/content/postcodecallback.js?v=1"></script>
+		<script type="text/javascript" src="/envhack/content/envhackserviceclient.js?v=1"></script>
+		
+		<script>
+		    function doSearch() {
+		    	var name_element = document.getElementById("searchparam1");
+		    	console.log("Searching for " + name_element.value);
+		    	
+		    }
+		    
+		    var gl;
+		    
+		    function displayPosition(position) {
+		      var lonlat = new OpenLayers.LonLat(position.coords.longitude, position.coords.latitude);
+		      var gridProjection = new OpenSpace.GridProjection();
+		      var pos = gridProjection.getMapPointFromLonLat(lonlat);	
+		      var p = document.getElementById("yourLocation");
+		      var content = 'Details about map point: <br/> ' + pos.toString()
+		      marker = osMap.createMarker(pos,null,content);
+		      markers.addMarker(marker);
+		      
+		      osMap.setCenter(pos, 9)
+		      
+		      p.innerHTML = "<table border='1'><tr><th>Timestamp</th><td>" + position.timestamp +
+		      "<tr><th>Latitude (WGS84)</th><td>" + position.coords.latitude + " deg</td></tr>" +
+		      "<tr><th>Longitude (WGS84)</th><td>" + position.coords.longitude + " deg</td></tr></table>";
+		    }
+		     
+		    function displayError(positionError) {
+		      alert("error");
+		    }
+		     
+		    try {
+		      if (typeof navigator.geolocation === 'undefined'){
+		        gl = google.gears.factory.create('beta.geolocation');
+		      } else {
+		        gl = navigator.geolocation;
+		      }
+		    } catch(e) {}
+		     
+		    if (gl) {
+		      gl.getCurrentPosition(displayPosition, displayError);
+		    } else {
+		      alert("Geolocation services are not supported by your web browser.");
+		    }
+		</script>
+		<style type="text/css" id="custom-background-css">
+			body { 
+			    background-color: #E0E090; 
+			} 
+		</style>
+	</head>
+
+    
+	
+	<body onload="init()">
+		<h5>Envhack - OpenSpace api test</h5>
+		<!-- The div below holds the map -->
+		<div id="canvas">
+		<div class="container-fluid">
+		    <div class="row-fluid">
+			    <div id="search" class="span4">
+			        <!--Sidebar content-->
+				    <form onsubmit="doSearch();return false;"> <!-- Prevent conventional form submission -->
+				       <fieldset>
+					       <legend>Search for otters</legend>
+	    				   <label>Search param 1</label>
+				           
+				           <div class="input-append">
+							    <input name="searchparam1" id="searchparam1" placeholder="Type something..." type="text"></input>
+							    <!--  <i class="icon-search"></i> -->
+							    <!--  <button class="btn btn-primary" name="submit" onclick="doSearch();return false;" href="#" >Search</button> -->
+							    <span class="add-on"><i class="icon-search"></i></span>
+							    <div class="btn-group">
+								    <a class="btn btn-primary" href="#" onclick="doSearch();return false;">Search</a>
+								    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+								    <ul class="dropdown-menu">
+									    <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
+									    <li><a href="#"><i class="icon-trash"></i> Delete</a></li>
+									    <li><a href="#"><i class="icon-ban-circle"></i> Ban</a></li>
+									    <li class="divider"></li>
+									    <li><a href="#"><i class="i"></i> Make admin</a></li>
+								    </ul>
+							    </div>
+						   </div>
+				           <span class="help-block">Search for places of interest</span>
+				           
+				           <!--  <div class="input-prepend input-append">
+				              <div class="btn-group">
+				                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+				                <ul class="dropdown-menu">
+				                  <li><a href="#">Action</a></li>
+				                  <li><a href="#">Another action</a></li>
+				                  <li><a href="#">Something else here</a></li>
+				                  <li class="divider"></li>
+				                  <li><a href="#">Separated link</a></li>
+				                </ul>
+				              </div><!- - /btn-group - ->
+				              <input type="text" id="appendedPrependedDropdownButton" class="span2">
+				              <div class="btn-group">
+				                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
+				                <ul class="dropdown-menu">
+				                  <li><a href="#">Action</a></li>
+				                  <li><a href="#">Another action</a></li>
+				                  <li><a href="#">Something else here</a></li>
+				                  <li class="divider"></li>
+				                  <li><a href="#">Separated link</a></li>
+				                </ul>
+				              </div><!- - /btn-group - ->
+				            </div>
+				            -->
+				            
+				           
+			           </fieldset>
+			           <p id="yourLocation">Location: unknown</p>
+			        </form>
+			    </div>
+			    <!--  <div id="spacer" class="span1"></div> -->
+			    <div id="map" class="span8">
+			    <!--Body content-->
+			    </div>
+		    </div>
+	    </div>
+	    </div>
+	    
+		<!--  <div id="map"></div>
+	    <div id="search" style="float:left">
+	       <form>
+	           <input name="searchparam1" id="searchparam1"></input>
+	           <button name="submit" onclick="doSearch();return false;" href="#" >Search</button>
+	       </form>
+	    </div>
+	    -->
+	</body>
+</html>
