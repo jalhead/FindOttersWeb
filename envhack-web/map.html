@@ -111,11 +111,27 @@
 		      var gridProjection = new OpenSpace.GridProjection();
 		      TL = gridProjection.getLonLatFromMapPoint(TL);	
 		      BR = gridProjection.getLonLatFromMapPoint(BR);	
-                      var requestString = 'http://damp-sierra-3977.herokuapp.com/otters?topLat='+TL.lat+'&topLong='+TL.lon+'&bottomLat='+BR.lat+'&bottomLong='+BR.lon;
-		      // TODO - make request
-                      console.log(requestString);
-		      addOtter(-2.603191, 51.455839);
-		      addOtter(-2.602191,51.456839);
+		      
+		      var request = OpenLayers.Request.GET({
+                        //url : "http://otterspotter.herokuapp.com/otters",
+                        url : "/otters",
+                        params: {
+                          topLat: TL.lat,
+                          topLong: TL.lon,
+                          bottomLat: BR.lat,
+                          bottomLong: BR.lon
+                        },
+                        async : false
+                      });
+
+			console.log('here!');
+                       
+		      var jsonData = JSON.parse(request.responseText);
+                      for (i=0;i<jsonData.otters.length;i++) {
+		        var otter = jsonData.otters[i];
+			console.log('Adding an otter');
+		      	addOtter(otter.long, otter.lat, null);
+                      }
 		    }
 		     
 		    try {
@@ -160,7 +176,7 @@
 							    <!--  <button class="btn btn-primary" name="submit" onclick="doSearch();return false;" href="#" >Search</button> -->
 							    <span class="add-on"><i class="icon-search"></i></span>
 							    <div class="btn-group">
-								    <a class="btn btn-primary" href="#" onclick="displayOttersNearCurrentLocation(null,null);return false;">Search</a>
+								    <a class="btn btn-primary" href="#" onclick="displayOttersNearCurrentLocation();return false;">Search</a>
 								    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 								    <ul class="dropdown-menu">
 									    <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>
