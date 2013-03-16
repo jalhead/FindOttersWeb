@@ -30,6 +30,7 @@
 		      var size = new OpenLayers.Size(75,75);
 		      var offset = new OpenLayers.Pixel(-size.w/2, -size.h/2);
 		      otterIcon = new OpenSpace.Icon('/img/otter.png', size, offset);
+                      console.log("Otter icon has been loaded");
 		    }
 
 		    function addMarker(pos, icon, content) {
@@ -38,7 +39,7 @@
 		      markers.addMarker(marker);
 	            }
 
-		    function addOtter(latitude, longitude) {
+		    function addOtter(longitude, latitude) {
 		      var lonlat = new OpenLayers.LonLat(longitude, latitude);
 		      var gridProjection = new OpenSpace.GridProjection();
 		      var pos = gridProjection.getMapPointFromLonLat(lonlat);	
@@ -57,8 +58,7 @@
 		      addMarker(pos,null,content);
 		      
 		      osMap.setCenter(pos, 9)
-		      
-		      addOtter(51.455839,-2.603191);
+		      displayOttersNearLocation(position.coords.longitude, position.coords.latitude);
 		      
 		      p.innerHTML = "<table border='1'><tr><th>Timestamp</th><td>" + position.timestamp +
 		      "<tr><th>Latitude (WGS84)</th><td>" + position.coords.latitude + " deg</td></tr>" +
@@ -67,6 +67,11 @@
 		     
 		    function displayError(positionError) {
 		      alert("error");
+		    }
+
+		    function displayOttersNearLocation(longitude, latitude) {
+		      addOtter(-2.603191, 51.455839);
+		      addOtter(-2.602191,51.456839);
 		    }
 		     
 		    try {
@@ -79,6 +84,7 @@
 		     
 		    if (gl) {
 		      gl.getCurrentPosition(displayPosition, displayError);
+		      //displayOttersNearLocation(null, null);
 		    } else {
 		      alert("Geolocation services are not supported by your web browser.");
 		    }
