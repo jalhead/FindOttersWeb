@@ -93,7 +93,7 @@
 		      addMarker(pos,null,content);
 		      
 		      osMap.setCenter(pos, 9)
-		      displayOttersNearLocation(position.coords.longitude, position.coords.latitude);
+		      displayOttersNearCurrentLocation();
 		      
 		      p.innerHTML = "<table border='1'><tr><th>Timestamp</th><td>" + position.timestamp +
 		      "<tr><th>Latitude (WGS84)</th><td>" + position.coords.latitude + " deg</td></tr>" +
@@ -104,10 +104,10 @@
 		      alert("error");
 		    }
 
-		    function displayOttersNearLocation(longitude, latitude) {
+		    function displayOttersNearCurrentLocation() {
 		      var bounds = osMap.getExtent();
-		      var TL = new OpenSpace.MapPoint(bounds.left, bounds.top);
-		      var BR = new OpenSpace.MapPoint(bounds.right, bounds.bottom);
+		      var TL = new OpenSpace.MapPoint(bounds.right, bounds.top);
+		      var BR = new OpenSpace.MapPoint(bounds.left, bounds.bottom);
 		      var gridProjection = new OpenSpace.GridProjection();
 		      TL = gridProjection.getLonLatFromMapPoint(TL);	
 		      BR = gridProjection.getLonLatFromMapPoint(BR);	
@@ -142,7 +142,7 @@
     
 	
 	<body onload="init()">
-		<h5>Envhack - OpenSpace api test</h5>
+		<h1 class="title"><span class="title-sp">sp</span><span class="title-otter">otter</span></h1>
 		<!-- The div below holds the map -->
 		<div id="canvas">
 		<div class="container-fluid">
@@ -160,7 +160,7 @@
 							    <!--  <button class="btn btn-primary" name="submit" onclick="doSearch();return false;" href="#" >Search</button> -->
 							    <span class="add-on"><i class="icon-search"></i></span>
 							    <div class="btn-group">
-								    <a class="btn btn-primary" href="#" onclick="doSearch();return false;">Search</a>
+								    <a class="btn btn-primary" href="#" onclick="displayOttersNearCurrentLocation(null,null);return false;">Search</a>
 								    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
 								    <ul class="dropdown-menu">
 									    <li><a href="#"><i class="icon-pencil"></i> Edit</a></li>

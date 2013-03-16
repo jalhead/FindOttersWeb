@@ -65,6 +65,19 @@ audio:not([controls]) {
   display: none;
 }
 
+.title {
+  padding-left: 0.3em;
+  font-size: 4em;
+}
+
+.title-sp {
+  color: gray;
+}
+
+.title-otter {
+  color: black;
+}
+
 html {
   font-size: 100%;
   -webkit-text-size-adjust: 100%;
