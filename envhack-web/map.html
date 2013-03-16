@@ -39,11 +39,46 @@
 		      markers.addMarker(marker);
 	            }
 
-		    function addOtter(longitude, latitude) {
-		      var lonlat = new OpenLayers.LonLat(longitude, latitude);
+		    function getNearestOtter(dataset) {
+                      // TODO
+                    }
+
+		    // returns the date of the last sighting
+		    // for a particular otter site.
+                    // returns null if the sighting was never made
+	            function getLastSightingDate(data) {
+                      if (data.v5 == 'P') {
+                        return data.dateV5
+                      } else if (data.v4 == 'P') {
+                        return data.dateV4;
+                      } else if (data.v3 == 'P') {
+                        return data.dateV3;
+                      } else if (data.v2 == 'P') {
+                        return data.dateV2;
+                      } else if (data.v1 == 'P') {
+                        return data.dateV1;
+                      } else {
+			return null;
+                      }
+                    }
+
+		    function addOtter(longitude, latitude, data) {
+		      // TODO - remove these if statements when data is actually being passed in
+		      if (data) {
+                        var lonlat = new OpenLayers.LonLat(data.long, data.lat);
+                      } else {
+		        var lonlat = new OpenLayers.LonLat(longitude, latitude);
+		      }
 		      var gridProjection = new OpenSpace.GridProjection();
-		      var pos = gridProjection.getMapPointFromLonLat(lonlat);	
-                      var content = 'Otter!'; 
+		      var pos = gridProjection.getMapPointFromLonLat(lonlat);
+		      if (data) {	
+                        var content = 'Site name: '+data.siteName+'<br />Date sighted: '+getLastSightingDate(data);
+		        if (data.mink == 'P') {
+		          content = content + '<br/>Mink also present';
+		        }
+		      } else {
+                        var content = 'Otter!';
+                      }
 		      addMarker(pos,otterIcon.clone(),content);
 		    }
 		    
@@ -70,6 +105,10 @@
 		    }
 
 		    function displayOttersNearLocation(longitude, latitude) {
+		      var bounds = osMap.getExtent();
+                      var requestString = 'http://damp-sierra-3977.herokuapp.com/otters?topLat='+bounds.left+'&topLong='+bounds.top+'&bottomLat='+bounds.right+'&bottomLong='+bounds.bottom;
+		      // TODO - make request
+                      console.log(requestString);
 		      addOtter(-2.603191, 51.455839);
 		      addOtter(-2.602191,51.456839);
 		    }
@@ -84,7 +123,6 @@
 		     
 		    if (gl) {
 		      gl.getCurrentPosition(displayPosition, displayError);
-		      //displayOttersNearLocation(null, null);
 		    } else {
 		      alert("Geolocation services are not supported by your web browser.");
 		    }
@@ -128,34 +166,6 @@
 								    </ul>
 							    </div>
 						   </div>
-				           <span class="help-block">Search for places of interest</span>
-				           
-				           <!--  <div class="input-prepend input-append">
-				              <div class="btn-group">
-				                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-				                <ul class="dropdown-menu">
-				                  <li><a href="#">Action</a></li>
-				                  <li><a href="#">Another action</a></li>
-				                  <li><a href="#">Something else here</a></li>
-				                  <li class="divider"></li>
-				                  <li><a href="#">Separated link</a></li>
-				                </ul>
-				              </div><!- - /btn-group - ->
-				              <input type="text" id="appendedPrependedDropdownButton" class="span2">
-				              <div class="btn-group">
-				                <button data-toggle="dropdown" class="btn dropdown-toggle">Action <span class="caret"></span></button>
-				                <ul class="dropdown-menu">
-				                  <li><a href="#">Action</a></li>
-				                  <li><a href="#">Another action</a></li>
-				                  <li><a href="#">Something else here</a></li>
-				                  <li class="divider"></li>
-				                  <li><a href="#">Separated link</a></li>
-				                </ul>
-				              </div><!- - /btn-group - ->
-				            </div>
-				            -->
-				            
-				           
 			           </fieldset>
 			           <p id="yourLocation">Location: unknown</p>
 			        </form>
