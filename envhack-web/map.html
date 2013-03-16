@@ -38,8 +38,8 @@
 		      markers.addMarker(marker);
 	            }
 
-		    function addOtter(easting, northing) {
-		      var lonlat = new OpenLayers.LonLat(easting, northing); // change me to actually use EN
+		    function addOtter(latitude, longitude) {
+		      var lonlat = new OpenLayers.LonLat(longitude, latitude);
 		      var gridProjection = new OpenSpace.GridProjection();
 		      var pos = gridProjection.getMapPointFromLonLat(lonlat);	
                       var content = 'Otter!'; 
@@ -58,7 +58,7 @@
 		      
 		      osMap.setCenter(pos, 9)
 		      
-		      addOtter(-2.603191,51.455839);
+		      addOtter(51.455839,-2.603191);
 		      
 		      p.innerHTML = "<table border='1'><tr><th>Timestamp</th><td>" + position.timestamp +
 		      "<tr><th>Latitude (WGS84)</th><td>" + position.coords.latitude + " deg</td></tr>" +
