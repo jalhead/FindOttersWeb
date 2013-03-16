@@ -3,24 +3,47 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Map with markers</title>
-		<link rel="stylesheet" href="/envhack/content/basicmap.css" type="text/css"/>
-		<link rel="stylesheet" href="/envhack/content/bootstrap.css" type="text/css"/>
-		
+		<link rel="stylesheet" href="/css/basicmap.css" type="text/css"/>
+		<link rel="stylesheet" href="/css/bootstrap.css" type="text/css"/>
 		
 		<!-- Using JH's API key - change if you want to access via a non-localhost url  -->
 		<script type="text/javascript"
 			src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key=D7875AA835649C09E0405F0AC8607A15"></script>
-		<script type="text/javascript" src="/envhack/content/jquery-1.9.1.js"></script>
-		<script type="text/javascript" src="/envhack/content/bootstrap.js"></script>
-		<script type="text/javascript" src="/envhack/content/map_init.js?v=1"></script>
-		<script type="text/javascript" src="/envhack/content/postcodecallback.js?v=1"></script>
-		<script type="text/javascript" src="/envhack/content/envhackserviceclient.js?v=1"></script>
+		<script type="text/javascript" src="/js/jquery-1.9.1.js"></script>
+		<script type="text/javascript" src="/js/bootstrap.js"></script>
+		<script type="text/javascript" src="/js/map_init.js?v=1"></script>
+		<script type="text/javascript" src="/js/postcodecallback.js?v=1"></script>
+		<script type="text/javascript" src="/js/content/envhackserviceclient.js?v=1"></script>
 		
 		<script>
+		    var osMap;
+		    var markers;
+		    var otterIcon;
+		    var postCodeService;
+
 		    function doSearch() {
 		    	var name_element = document.getElementById("searchparam1");
 		    	console.log("Searching for " + name_element.value);
-		    	
+		    }
+
+		    function loadOtterIcon() {
+		      var size = new OpenLayers.Size(75,75);
+		      var offset = new OpenLayers.Pixel(-size.w/2, -size.h/2);
+		      otterIcon = new OpenSpace.Icon('/img/otter.png', size, offset);
+		    }
+
+		    function addMarker(pos, icon, content) {
+		      marker = osMap.createMarker(pos,icon,content);
+		      marker.map = osMap;
+		      markers.addMarker(marker);
+	            }
+
+		    function addOtter(easting, northing) {
+		      var lonlat = new OpenLayers.LonLat(easting, northing); // change me to actually use EN
+		      var gridProjection = new OpenSpace.GridProjection();
+		      var pos = gridProjection.getMapPointFromLonLat(lonlat);	
+                      var content = 'Otter!'; 
+		      addMarker(pos,otterIcon.clone(),content);
 		    }
 		    
 		    var gl;
@@ -31,10 +54,11 @@
 		      var pos = gridProjection.getMapPointFromLonLat(lonlat);	
 		      var p = document.getElementById("yourLocation");
 		      var content = 'Details about map point: <br/> ' + pos.toString()
-		      marker = osMap.createMarker(pos,null,content);
-		      markers.addMarker(marker);
+		      addMarker(pos,null,content);
 		      
 		      osMap.setCenter(pos, 9)
+		      
+		      addOtter(-2.603191,51.455839);
 		      
 		      p.innerHTML = "<table border='1'><tr><th>Timestamp</th><td>" + position.timestamp +
 		      "<tr><th>Latitude (WGS84)</th><td>" + position.coords.latitude + " deg</td></tr>" +
